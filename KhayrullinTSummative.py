@@ -292,7 +292,7 @@ class EnemyBullet(Bullet):
         if self.deathTick > 1:
             enemyBullets.remove(self)    
 
-
+  
 enemies = []
 spawnX = 0
 spawnY = 0
@@ -428,6 +428,7 @@ class Turret(Enemy):
     def update(self, tox, toy, enemies):
         if hypot((self.x - tox), (self.y - toy)) > 400:
             Enemy.update(self, tox, toy, enemies)
+
 
 class Boss():
     
@@ -638,6 +639,7 @@ class Boss():
             self.phase = 1
         
         
+
 class Heart():
     #basic heart pickup
     def __init__(self, x, y, hp):
@@ -672,6 +674,7 @@ class Heart():
         screen.blit(self.image, self.rect)
         
 
+ 
 mainMenuRect = []
 for y in range(200, 500, 100):
     mainMenuRect.append(Rect(400, y, 200, 75))
