@@ -1,3 +1,4 @@
-import winsound
-winsound.PlaySound('', winsound.SND_LOOP + winsound.SND_ASYNC)
+mixer.init()
+mixer.music.load("music.ogg")
+mixer.music.play(-1)
 
