@@ -9,6 +9,17 @@ class Player:
     
     
     def __init__(self, mouse_x, mouse_y, x, y):
+        #player stats
+        self.gun = 1
+        self.speed = 10
+        self.max_health = 1000
+        self.health = 1000
+        self.dmg_upG = 0
+        self.firingSpeed_upG = 0
+        self.shotSpeed_upG = 0
+        self.dmg_mult = 1
+        self.coins = 0
+        self.invulnerability = 0        
         #directions is a list containing states for moving up, down, left or right
         #speed is thepllayers speed constant (subject to change if upgrades are implemented)
         #x and y are thepllayers technical x and yplosition value, but they do not represent the hitbox. Think of them as theplosition of the top-left corner of the IMAGE for thepllayer.
@@ -36,17 +47,7 @@ class Player:
         self.muzzle_y = int(10 * (self.mouse_y - self.center_y) /
                       (sqrt((self.mouse_x - self.center_x) ** 2 +
                                  (self.mouse_y - self.center_y) ** 2)))
-        #player stats
-        self.gun = 1
-        self.speed = 10
-        self.max_health = 1000
-        self.health = 1000
-        self.dmg_upG = 0
-        self.firingSpeed_upG = 0
-        self.shotSpeed_upG = 0
-        self.dmg_mult = 1
-        self.coins = 0
-        self.invulnerability = 0
+        
     
     #handles player orientation towards the mouse
     def rotate(self, mouseX, mouseY):
@@ -62,6 +63,10 @@ class Player:
      
     #handles movement and health of player
     def update(self, mouse_x, mouse_y, enemies, enemyBullets):
+        if self.invulnerability != 0:
+            self.original_image = image.load('resources/player/cannonEnd2.png').convert_alpha()
+        else:
+            self.original_image = image.load('resources/player/cannonEnd1.png').convert_alpha()        
         #if any direction states are true, movespllayer in said direction using self.speed
         if self.directions[0]:
             if 0 < self.center_y:
