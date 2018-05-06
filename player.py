@@ -44,6 +44,7 @@ class Player:
         self.firingSpeed_upG = 0
         self.shotSpeed_upG = 0
         self.dmg_mult = 1
+        self.coins = 0
     
     #handles player orientation towards the mouse
     def rotate(self, mouseX, mouseY):

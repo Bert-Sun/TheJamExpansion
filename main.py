@@ -17,7 +17,11 @@ from pygame import *
 from sys import *
 from math import *
 import random
+
 init()
+mixer.init()
+mixer.music.load("music.ogg")
+mixer.music.play(-1)
 
 # screen init
 backg = ('background.png') 

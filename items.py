@@ -125,17 +125,18 @@ class EnemyBullet(Bullet):
     def check(self, playerHitbox):
         # Checks if the bullet is out of range, then deletes it, if it is
         if self.prog >= self.rnge:
-            enemyBullets.remove(self)
+            return False
         
-        elif not 0 < self.x < WIDTH or not 0 < self.y < HEIGHT:
-            enemyBullets.remove(self) 
+        elif not 0 < self.x < 1000 or not 0 < self.y < 700:
+            return False
             
         #checks if bullet hits target hitbox, if so, starts a timer that kills the bulle after 1 frame
         elif self.rect.colliderect(playerHitbox):
             self.deathTick += 1
 
         if self.deathTick > 1:
-            enemyBullets.remove(self)    
+            return False   
+        return True
 
 class Heart():
     #basic heart pickup
@@ -153,7 +154,7 @@ class Heart():
         self.health += 1
         #checks if it's supposed to die, if so, dies.
         if self.health >= self.life_span:
-            pickups.remove(self)
+            return False
         
         #checks if player touched it, if so, grants player health, and keels over (if granted health makes player health go over limit, adds however much it can before the limit is reached)
         if self.rect.colliderect(player.hitbox):
@@ -171,4 +172,31 @@ class Heart():
     def draw(self, screen):
         screen.blit(self.image, self.rect)
         
+class JamCoin():
+    #basic heart pickup
+    def __init__(self, x, y):
+        #image and position (image scales to hp value)
+        self.image = image.load('resources/jam/jam.png').convert_alpha()
+        self.x = x
+        self.y = y
+        self.rect = Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
+        self.life_span = 500
+        self.health = 0
+        
+    def update(self, player):
+        self.health += 1
+        #checks if it's supposed to die, if so, dies.
+        if self.health >= self.life_span:
+            return False
+        
+        #checks if player touched it, if so, grants player health, and keels over (if granted health makes player health go over limit, adds however much it can before the limit is reached)
+        if self.rect.colliderect(player.hitbox):
+            player.coins += 1
+            return False
+        return True
+    
+    #draws self
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)
+           
 
