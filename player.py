@@ -46,6 +46,7 @@ class Player:
         self.shotSpeed_upG = 0
         self.dmg_mult = 1
         self.coins = 0
+        self.invulnerability = 0
     
     #handles player orientation towards the mouse
     def rotate(self, mouseX, mouseY):
@@ -91,14 +92,17 @@ class Player:
         except: 
             pass
         
-        #checks if any enemies hit the player
+        if self.invulnerability > 0:
+            self.invulnerability -= 1        
+        
+            #checks if any enemies hit the player
         for e in enemies:
-            if self.hitbox.colliderect(e.hitbox):
+            if self.hitbox.colliderect(e.hitbox) and self.invulnerability == 0:
                 self.health -= e.dmg
         
-        #check if any enemy bullets hit the player
+         #check if any enemy bullets hit the player
         for b in enemyBullets:
-            if self.hitbox.colliderect(b.rect):
+            if self.hitbox.colliderect(b.rect) and self.invulnerability == 0:
                 self.health -= b.dmg
                 
         

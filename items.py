@@ -213,4 +213,39 @@ class JamCoin():
     def draw(self, screen):
         screen.blit(self.image, self.rect)
            
+class activeitem():
+    pass
+
+class Oxford():
+    pass
+    def __init__(self, x, y):
+        self.image = image.load('resources/jam/oxford.png').convert_alpha()
+        self.x = x
+        self.y = y        
+        self.rect = Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
+        
+
+
+
+
+class Cloudflare():
+    def __init__(self, x, y):
+        self.image = image.load('resources/jam/cloudflare.png').convert_alpha()
+        self.x = x
+        self.y = y            
+        self.rect = Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
+        self.health = 0
+        self.lifespan = 0
+        
+    def update(self, player):
+        self.health += 1
+        if self.health >= self.life_span:
+            return False
+        
+        #checks if player touched it, give invulnerability
+        if self.rect.colliderect(player.hitbox):
+            player.invulnerability = 180
+            return False
+        return True    
+
 
