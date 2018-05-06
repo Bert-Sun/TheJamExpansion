@@ -1,4 +1,5 @@
-mixer.init()
-mixer.music.load("music.ogg")
-mixer.music.play(-1)
+def bgmusic():
+  mixer.init()
+  mixer.music.load("music.ogg")
+  mixer.music.play(-1)
 
