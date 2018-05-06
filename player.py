@@ -10,6 +10,7 @@ class Player:
     
     def __init__(self, mouse_x, mouse_y, x, y):
         #player stats
+        self.hasOxford = False
         self.gun = 1
         self.speed = 10
         self.max_health = 1000

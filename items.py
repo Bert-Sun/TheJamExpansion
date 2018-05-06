@@ -114,7 +114,7 @@ class Shotgun(Bullet):
     #spread bullet at 15 degrees
     def __init__(self, x, y, target_x, target_y):
         Bullet.__init__(self, x, y, target_x, target_y)
-        self.image = image.load('resources/player/sniper_bullet.png').convert_alpha()
+        self.image = image.load('resources/player/shotgun_bullet.png').convert_alpha()
         self.hold = False
         self.vel = 20
         self.rnge = 50 

@@ -67,15 +67,9 @@ for y in range(200, 500, 100):
 def findAddedAngle(px, py, pAngle, addedAngle):
     fireAngle = pAngle+addedAngle
 
-    dy = tan(radians(fireAngle))
-    
-    if fireAngle < -90 or fireAngle > 90:
-        x = px - 500 
-        y = py + 500* abs(dy)       
-        return (-x,-y,dy)
-    x = px + 500 
-    y = py - 500* dy    
-    return (x,y,dy)
+    x = px+250*cos(radians(fireAngle))
+    y = (py-250*sin(radians(fireAngle)))
+    return (x,y)
 #function for drawing the main menu
 def drawMain(): 
     draw.rect(screen, BLACK, (0,0, WIDTH, HEIGHT))
@@ -160,8 +154,9 @@ upgradeRect = []
 for y in range(200, 500, 115):
     for x in range(200, 800, 200):
         upgradeRect.append(Rect(x, y, 185, 100))
-    
-def drawUpgradeScreen(pl):
+
+texts = ['+ damage', '+ speed', '+ firing speed', 'restore health', '+ max health', '+ shot speed', 'next stage', 'shotgun', 'oxford']
+def drawUpgradeScreen(pl, texts):
     #as long as boss level isn't ahead, displays upgrade instructions
     draw.rect(screen, BLACK, (0,0, WIDTH, HEIGHT))
     if level < 5 :
@@ -172,7 +167,6 @@ def drawUpgradeScreen(pl):
         screen.blit(fontTitle.render("Warning:",  1,  (255,  0,  0)), (50, 5, fontTitle.size("Warning:")[0], fontTitle.size("Warning")[1]))  
         screen.blit(fontTitle.render("Boss Battle Ahead",  1,  (255,  0,  0)), (50, fontTitle.size("Boss Battle Ahead")[1]+5, fontTitle.size("Boss Battle Ahead")[0], fontTitle.size("Boss Battle Ahead")[1]))        
     #for each text, displays corresponding upgrade button with text on it
-    texts = ['+ damage', '+ speed', '+ firing speed', 'restore health', '+ max health', '+ shot speed', 'next stage']
     for i in range(len(texts)):
         draw.rect(screen, WHITE, upgradeRect[i])  
         #draw.rect(screen, RED, rect, 4)
@@ -182,6 +176,18 @@ def drawUpgradeScreen(pl):
             screen.blit(coinPic, upgradeRect[i].move(5,45))
             screen.blit(cost, upgradeRect[i].move(50, 45))            
         screen.blit(text, upgradeRect[i].move(5,5))
+        if i == 7 and pl.gun != 2:
+            cost = fontGeneral.render(str(1250), 1, (0, 0, 0))
+            screen.blit(coinPic, upgradeRect[i].move(5,45))
+            screen.blit(cost, upgradeRect[i].move(50, 45)) 
+        elif i == 7 and not pl.hasOxford:
+            cost = fontGeneral.render(str(500), 1, (0, 0, 0))
+            screen.blit(coinPic, upgradeRect[i].move(5,45))
+            screen.blit(cost, upgradeRect[i].move(50, 45)) 
+        if i == 8 and not pl.hasOxford:
+            cost = fontGeneral.render(str(500), 1, (0, 0, 0))
+            screen.blit(coinPic, upgradeRect[i].move(5,45))
+            screen.blit(cost, upgradeRect[i].move(50, 45))            
     #ea 
     screen.blit(transform.scale(image.load('resources/jam/ea.png'), (175, 175)), Rect(5, 250, 50, 50))
     #displays jam coin amount
@@ -190,6 +196,14 @@ def drawUpgradeScreen(pl):
     screen.blit(text, (WIDTH - textSize[0] - 15, textSize[1] * 6 - 15))
     
     screen.blit(transform.scale(coinPic, (int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5))), Rect(WIDTH - textSize[0] - 45, textSize[1] * 6 - 11, int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5)))    
+
+def drawbrainmeme():
+    brainmeme = image.load('resources\jam\expanddddd.jpg')
+    screen.blit(brainmeme, (0,0))
+    nani = mixer.Sound(r'resources\jam\NANI.ogg')
+    nani.play()
+    display.flip()
+    time.wait(500)
 
 #general var init
 clock = time.Clock()
@@ -225,11 +239,10 @@ graceTimer = 0
 #used for debugging the game (set to true for cheats)
 debug = False
 
-
 #list of class names for all bullet types
 guns = [Gattling, Sniper, Shotgun]
 # list of pngs of all bullets in the game
-bulletPics = [image.load('resources/player/gattling_bullet.png').convert_alpha(), image.load('resources/player/sniper_bullet.png').convert_alpha(), image.load('resources/player/sniper_bullet.png').convert_alpha()]
+bulletPics = [image.load('resources/player/gattling_bullet.png').convert_alpha(), image.load('resources/player/sniper_bullet.png').convert_alpha(), image.load('resources/player/shotgun_bullet.png').convert_alpha()]
 #abreviation for player class
 bossFight = False
 pl = Player(mx, my , x ,y)
@@ -310,7 +323,7 @@ while running:
               
         if menu == UPGRADE:
             
-            drawUpgradeScreen(pl)
+            drawUpgradeScreen(pl, texts)
             if button == 1:
                 #if clicked upgrade button, changes appropriate stat and resumes game 
                 if upgradeRect[0].collidepoint(mx, my):
@@ -343,15 +356,44 @@ while running:
                         pl.shotSpeed_upG += 1
                         pl.coins -= upgradeCost[5]                        
                         upgradeCost[5] = int(upgradeCost[5]*1.33)
-                button = 0
+                
                 if upgradeRect[6].collidepoint(mx, my):
                     runMenu = False
                     game = True
                     mixer.music.load("music.ogg")
-                    mixer.music.play(-1)                    
-                
-                
-    
+                    mixer.music.play(-1)                      
+                    
+                button = 0
+                if pl.gun != 2 and not pl.hasOxford:
+                    if upgradeRect[7].collidepoint(mx, my):
+                        if pl.coins > 1250:
+                            pl.coins -= 1250
+                            pl.gun = 2
+                            texts.remove('shotgun')
+                            drawUpgradeScreen(pl, texts)
+                    if upgradeRect[8].collidepoint(mx, my):
+                        if pl.coins > 500:
+                            pl.coins -= 500
+                            pl.hasOxford = True
+                            texts.remove('oxford')
+                            drawUpgradeScreen(pl, texts)
+                            
+                elif pl.gun != 2:
+                    if upgradeRect[7].collidepoint(mx, my):
+                        if pl.coins > 1250:
+                            pl.coins -= 1250
+                            pl.gun = 2
+                            texts.remove('shotgun')
+                            drawUpgradeScreen(pl, texts)
+                            
+                elif not pl.hasOxford:
+                    if upgradeRect[7].collidepoint(mx, my):
+                        if pl.coins > 500:
+                            pl.coins -= 500
+                            pl.hasOxford = True
+                            texts.remove('oxford')
+                            drawUpgradeScreen(pl, texts)  
+                            
         # obligatory frame-check and display flip
         clock.tick(60)
         display.flip()
@@ -380,9 +422,11 @@ while running:
                     pl.directions[2] = True
                 if evnt.key == K_d:
                     pl.directions[3] = True
-                if evnt.key == K_m:
+                if evnt.key == K_SPACE and pl.hasOxford:
                     enemies = []
                     waitingEnemies = []
+                    pl.hasOxford = False
+                    drawbrainmeme()
                 if evnt.key == K_p:
                     pl.coins += 10000
                     
@@ -633,6 +677,12 @@ while running:
         #pl.debug(guns[pl.gun](pl.muzzle_x, pl.muzzle_y, mx, my).firing_speed) #debug info display for player
     
         """HUD drawing"""
+        
+        #draws the oxford icon:
+        if pl.hasOxford:
+            oxford = image.load('resources\jam\oxford.png')
+            oxford = transform.scale(oxford, (100, 30))
+            screen.blit(oxford, (WIDTH - 100 - 15, 230))
         
         #displays jam coin amount
         text = fontCal.render("coins: %i" %pl.coins, 1,BLACK)
