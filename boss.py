@@ -3,6 +3,9 @@ from enemies import *
 import random
 init()
 
+fontGeneral = font.Font('resources/fonts/Calibri.ttf', 30)
+fontHealth = font.Font('resources/fonts/Calibri Bold.ttf', 15)
+
 class Boss():
     
     def __init__(self):
@@ -57,12 +60,12 @@ class Boss():
             if 0 < self.x:
                 self.x -= 3
         elif self.directions == 3:
-            if self.x + 800 < WIDTH:
+            if self.x + 800 < 1000:
                 self.x += 3   
     
     
     #attack coreography
-    def attack1(self):  
+    def attack1(self, enemyBullets):  
         #shoots 5 pellet spread from random gun
         if self.attacks[0]:
             self.target_gun = self.gun_pos[random.randint(0,4)]
@@ -74,7 +77,7 @@ class Boss():
             #ends attack
             self.attacks[0] = False
     
-    def attack2(self):
+    def attack2(self, enemyBullets):
         # shoots triple shots in random gun pattern
         if self.attacks[1]:
             for i in range(len(self.gun_queue)):
@@ -95,7 +98,7 @@ class Boss():
             else:
                 self.firing_time += 1
             
-    def attack3(self):
+    def attack3(self, enemyBullets):
         #shoots stream of bullets from left to right from random guns
         if self.attacks[2]:
             for angle in range(60, 120, -self.phase + 3):
@@ -115,7 +118,7 @@ class Boss():
                     break
             else: self.firing_time += 1
             
-    def attack4(self):
+    def attack4(self, enemyBullets):
         #shoots stream of bullets from left to right
         if self.attacks[3]:
             for angle in range(120, 60, -(-self.phase + 3)):
@@ -136,22 +139,22 @@ class Boss():
             else: self.firing_time += 1        
     
     #if player is out of range, shoots beam straight at player (to encourage player to stay within borderlines)
-    def outOfRangeAttack(self):
+    def outOfRangeAttack(self, pl, enemyBullets):
         if pl.center_x < self.x - 100:
             enemyBullets.append(EnemyBullet(self.gun_pos[0][0]+self.x, self.gun_pos[0][1]+self.y, pl.center_x, pl.center_y, 15 * self.phase))
         elif pl.center_x > self.x + 800 + 100:
             enemyBullets.append(EnemyBullet(self.gun_pos[4][0]+self.x, self.gun_pos[4][1]+self.y, pl.center_x, pl.center_y, 15 * self.phase))
     
     #draws itself and it's health
-    def draw(self):
+    def draw(self, screen):
         screen.blit(self.orig_imgs[self.phase], (self.x, self.y))
         self.rect = Rect(self.x, self.y, 800, 100)
-        draw.circle(screen, RED, (self.gun_pos[self.weakpoint][0] +self.x, self.gun_pos[self.weakpoint][1] +self.y), 53)
-        draw.rect(screen, (255, 255,0), (15, HEIGHT - 85, int(985 * self.health / self.max_health), 75))
-        screen.blit(fontGeneral.render("Boss health: %i/%i" %(self.health, self.max_health), 1, (0, 0, 255)), (467 - fontHealth.size("Boss health: %i/%i" %(self.health, self.max_health))[0] // 2, HEIGHT - 55 - fontHealth.size("Boss health: %i/%i" %(self.health, self.max_health))[1] // 2))
+        draw.circle(screen, (255,0,0), (self.gun_pos[self.weakpoint][0] +self.x, self.gun_pos[self.weakpoint][1] +self.y), 53)
+        draw.rect(screen, (255, 255,0), (15, 700 - 85, int(985 * self.health / self.max_health), 75))
+        screen.blit(fontGeneral.render("Boss health: %i/%i" %(self.health, self.max_health), 1, (0, 0, 255)), (467 - fontHealth.size("Boss health: %i/%i" %(self.health, self.max_health))[0] // 2, 700 - 55 - fontHealth.size("Boss health: %i/%i" %(self.health, self.max_health))[1] // 2))
     
     
-    def update(self):
+    def update(self, pl, eb):
         if self.grace_time == 0:
             #handles attack timings with some randomness
             self.attacks[random.randint(0,3)] = True
@@ -176,14 +179,14 @@ class Boss():
         self.weakpoint_rect = (self.gun_pos[self.weakpoint][0] + self.x - 53, self.gun_pos[self.weakpoint][1] + self.y - 53 , 106, 106)
         
         #tries to fire each attack
-        self.attack1() # random quad shot
-        self.attack2() # random sequence of triple shots
-        self.attack3() #chooses 2 random guns to fire from, goes from left to right
-        self.attack4() #chooses 2 random guns to fire from, goes from right to left
-        self.outOfRangeAttack() #shoots player if player is out of range
+        self.attack1(eb) # random quad shot
+        self.attack2(eb) # random sequence of triple shots
+        self.attack3(eb) #chooses 2 random guns to fire from, goes from left to right
+        self.attack4(eb) #chooses 2 random guns to fire from, goes from right to left
+        self.outOfRangeAttack(pl, eb) #shoots player if player is out of range
     
     #checks itself for health, changes phases after certain point
-    def check(self):
+    def check(self, bullets, pickups, bossFight, level):
         for b in bullets:
             if b.rect.colliderect(self.weakpoint_rect):
                 self.health -= b.dmg 
@@ -200,9 +203,7 @@ class Boss():
         
         # checks if it is supposed to die
         if self.health <= 0:
-            global bossFight
             bossFight = False
-            global level
             level = 6
             self.health = self.max_health
         #changes phases

@@ -598,14 +598,13 @@ while running:
             
         #draws boss, if it can
         if bossFight:
-            bs.draw()
-            bs.update()
-            bs.check()
+            bs.draw(screen)
+            bs.update(pl, enemyBullets)
+            bs.check(bullets, pickups, bossFight, level)
 
             
             
         # Draws all enemy bullets
-        print(len(enemyBullets))
         for bullet in enemyBullets:
             bullet.draw(screen)
             #bullet.debug() #draws debug info for bullets
@@ -619,7 +618,7 @@ while running:
             bullet.draw(screen)
             #bullet.debug()
             bullet.update()
-            if not bullet.check(enemies, bossFight):
+            if not bullet.check(enemies, bossFight, bs):
                 bullets.remove(bullet)
             
         # Draws player

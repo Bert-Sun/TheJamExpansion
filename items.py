@@ -47,7 +47,7 @@ class Bullet:
         
         self.rect.center = [self.x, self.y]
     
-    def check(self, enemies, bossFight):
+    def check(self, enemies, bossFight, bs):
         # Checks if the bullet is out of range, then deletes it, if it is
         if self.prog >= self.rnge:
             return False
