@@ -156,7 +156,7 @@ class Heart():
     #basic heart pickup
     def __init__(self, x, y, hp):
         #image and position (image scales to hp value)
-        self.image = transform.scale(image.load('resources/items/heart.png').convert_alpha(), (int((hp / 1000) * image.load('resources/items/heart.png').get_width() * 2), int((hp / 1000) * image.load('resources/items/heart.png').get_height() * 2)))
+        self.image = transform.scale(image.load('resources/jam/panago.png').convert_alpha(), (int((hp / 1000) * image.load('resources/items/heart.png').get_width() * 2), int((hp / 1000) * image.load('resources/items/heart.png').get_height() * 2)))
         self.x = x
         self.y = y
         self.rect = Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
