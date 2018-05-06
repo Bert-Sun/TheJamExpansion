@@ -1,3 +1,8 @@
+from pygame import *
+import items 
+import random
+init()
+
 class Boss():
     
     def __init__(self):
@@ -63,9 +68,9 @@ class Boss():
             self.target_gun = self.gun_pos[random.randint(0,4)]
             for angle in self.angles_quad:
                 #finds point on circle based on angle and radius, fires enemyBullet there
-                self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(angle + 45)), 
-                                          self.target_gun[1]+self.y + 50 * sin(radians(angle + 45)))            
-                enemyBullets.append(EnemyBullet(self.target_gun[0]+self.x, self.target_gun[1]+self.y, self.target_angle[0], self.target_angle[1], 15 * self.phase))
+                self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(angle)), 
+                                          self.target_gun[1]+self.y + 50 * sin(radians(angle)))            
+                enemyBullets.append(items.EnemyBullet(self.target_gun[0]+self.x, self.target_gun[1]+self.y, self.target_angle[0], self.target_angle[1], 15 * self.phase))
             #ends attack
             self.attacks[0] = False
     
@@ -81,7 +86,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(angle)), 
                                                   self.target_gun[1]+self.y + 50 * sin(radians(angle)))            
-                        enemyBullets.append(EnemyBullet(self.target_gun[0]+self.x, self.target_gun[1]+self.y, self.target_angle[0], self.target_angle[1], 15 * self.phase))
+                        enemyBullets.append(items.EnemyBullet(self.target_gun[0]+self.x, self.target_gun[1]+self.y, self.target_angle[0], self.target_angle[1], 15 * self.phase))
                 #ends attack
                 if self.firing_time == self.firing_speed[self.phase] * len(self.gun_queue):
                     self.attacks[1] = False
@@ -102,7 +107,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(angle)), 
                                                   self.target_gun[1]+self.y + 50 * sin(radians(angle)))            
-                        enemyBullets.append(EnemyBullet(self.target_gun[0]+self.x, self.target_gun[1]+self.y, self.target_angle[0], self.target_angle[1], 15 * self.phase))
+                        enemyBullets.append(items.EnemyBullet(self.target_gun[0]+self.x, self.target_gun[1]+self.y, self.target_angle[0], self.target_angle[1], 15 * self.phase))
                 #ends attack
                 if self.firing_time + 60 >= 120:
                     self.attacks[2] = False
@@ -122,7 +127,7 @@ class Boss():
                         #finds point on circle based on angle and radius, fires enemyBullet there
                         self.target_angle = (self.target_gun[0]+self.x + 50 * cos(radians(180 - angle)), 
                                                   self.target_gun[1]+self.y + 50 * sin(radians(180 -angle)))            
-                        enemyBullets.append(EnemyBullet(self.target_gun[0]+self.x, self.target_gun[1]+self.y, self.target_angle[0], self.target_angle[1], 15 * self.phase))
+                        enemyBullets.append(items.EnemyBullet(self.target_gun[0]+self.x, self.target_gun[1]+self.y, self.target_angle[0], self.target_angle[1], 15 * self.phase))
                 #ends attack
                 if self.firing_time + 60 >= 120:
                     self.attacks[3] = False
@@ -133,9 +138,9 @@ class Boss():
     #if player is out of range, shoots beam straight at player (to encourage player to stay within borderlines)
     def outOfRangeAttack(self):
         if pl.center_x < self.x - 100:
-            enemyBullets.append(EnemyBullet(self.gun_pos[0][0]+self.x, self.gun_pos[0][1]+self.y, pl.center_x, pl.center_y, 15 * self.phase))
+            enemyBullets.append(items.EnemyBullet(self.gun_pos[0][0]+self.x, self.gun_pos[0][1]+self.y, pl.center_x, pl.center_y, 15 * self.phase))
         elif pl.center_x > self.x + 800 + 100:
-            enemyBullets.append(EnemyBullet(self.gun_pos[4][0]+self.x, self.gun_pos[4][1]+self.y, pl.center_x, pl.center_y, 15 * self.phase))
+            enemyBullets.append(items.EnemyBullet(self.gun_pos[4][0]+self.x, self.gun_pos[4][1]+self.y, pl.center_x, pl.center_y, 15 * self.phase))
     
     #draws itself and it's health
     def draw(self):

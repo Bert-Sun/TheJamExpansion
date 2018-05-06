@@ -1,3 +1,7 @@
+from pygame import * 
+from math import *
+init()
+
 class Bullet:
     def __init__(self, x, y, target_x, target_y):
         #loads image of bullet
@@ -32,23 +36,23 @@ class Bullet:
     def update(self):
         # Increases Progress of the bullet
         try:
-            self.x += int((self.vel + pl.shotSpeed_upG) * (self.target_x - self.originalx) /
+            self.x += int((self.vel) * (self.target_x - self.originalx) /
                           (sqrt((self.target_x - self.originalx) ** 2 +
                                      (self.target_y - self.originaly) ** 2)))
-            self.y += int((self.vel + pl.shotSpeed_upG) * (self.target_y - self.originaly) /
+            self.y += int((self.vel) * (self.target_y - self.originaly) /
                           (sqrt((self.target_x - self.originalx) ** 2 +
                                      (self.target_y - self.originaly) ** 2)))
-        except: pass #catches divide by zero errors
+        except Exception as e: print(e) #catches divide by zero errors
         
         self.rect.center = [self.x, self.y]
     
-    def check(self, enemies):
+    def check(self, enemies, bossFight):
         # Checks if the bullet is out of range, then deletes it, if it is
         if self.prog >= self.rnge:
-            bullets.remove(self)
+            return False
         #checks if bullets are out of bounds
-        elif not 0 < self.x < WIDTH - self.w or not 0 < self.y < HEIGHT - self.h:
-            bullets.remove(self)
+        elif not 0 < self.x < 1000 - self.w or not 0 < self.y < 700 - self.h:
+            return False
             
         else:    
             #checks if bullet hits target hitbox, if so, starts a timer that kills the bullet after 1 frame
@@ -60,10 +64,12 @@ class Bullet:
                 self.deathTick += 1
             
             if self.deathTick > 1:
-                bullets.remove(self)
-     
+                return False
+        return True
+    
+    
     #draws each bullet      
-    def draw(self):
+    def draw(self, screen):
         screen.blit(self.image, self.rect)
         
     #displays current bullet picture in top-left 
@@ -158,10 +164,11 @@ class Heart():
                         break
             else:
                 player.health = 1000
-            pickups.remove(self)
+            return False
+        return True
     
     #draws self
-    def draw(self):
+    def draw(self, screen):
         screen.blit(self.image, self.rect)
         
 

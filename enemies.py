@@ -1,3 +1,10 @@
+from pygame import *
+from math import *
+from main import *
+from items import *
+import random
+init()
+
 class Enemy():
     #basic grunt. Slow, only does contact damage
     def __init__(self, x, y):
@@ -52,26 +59,27 @@ class Enemy():
         
         
     
-    def check(self, bullets, pickups):  
+    def check(self, bullets, pickups, pl):  
         #checks if any player bullets hit, if so, deletes some hp
         for b in bullets:
             self.image = self.original_img
             if self.hitbox.colliderect(b.rect):
-                self.image = image.load("resources/enemies/EnemyHit.png").convert_alpha()
                 self.health -= (b.dmg + pl.dmg_upG) * pl.dmg_mult * b.dmg_mult
         self.image = self.original_img
         
         #checks if enemy should die, if so, kills self and drops heart if it can (15% chance) 
         if self.age >= self.life_span:
-            enemies.remove(self)
+            return False
             
         if self.health <= 0:
-            enemies.remove(self)
             if self.health_drop_chance <= .15:
-                pickups.append(Heart(self.x, self.y, 200))
+                pickups.append(Heart(self.x, self.y, 200))            
+            return False
+        
+        return True
     
     #function for drawing the enemy
-    def draw(self):
+    def draw(self, screen):
         screen.blit(self.image, self.rect)
         
     #debug draw for enemy hitboxes, and enemy health
@@ -83,6 +91,7 @@ class Enemy():
         draw.line(screen, (128,128,128), (self.center_x, self.center_y), (tox, toy), 2)    
              
    
+
 class Shooter(Enemy):
     #super slow, shoots bullets at slow orig_imgs
     def __init__(self, x, y):

@@ -1,8 +1,14 @@
+from pygame import *
+from math import *
+init()
+
+fontHealth = font.Font('resources/fonts/Calibri Bold.ttf', 15)
+
 #class that handles everything related to the player
 class Player:
     
     
-    def __init__(self, mouse_x, mouse_y):
+    def __init__(self, mouse_x, mouse_y, x, y):
         #directions is a list containing states for moving up, down, left or right
         #speed is thepllayers speed constant (subject to change if upgrades are implemented)
         #x and y are thepllayers technical x and yplosition value, but they do not represent the hitbox. Think of them as theplosition of the top-left corner of the IMAGE for thepllayer.
@@ -45,6 +51,7 @@ class Player:
         rel_x, rel_y = mouseX - self.x, mouseY - self.y
         #this is where the magic happens. math.atan2 is used to calculate the angle from the current position to the new mouse position (at least that's what I got from it)
         angle = (180 / pi) * -atan2(rel_y, rel_x) + 5
+
         # Rotate the original image without modifying it.
         self.image = transform.rotate(self.original_image, int(angle))
         # Get a new rect with the center of the old rect.
@@ -95,7 +102,7 @@ class Player:
         
         
     #Draws player and player health in top-left   
-    def draw(self):
+    def draw(self, screen):
         #draws player
         screen.blit(self.image, (self.rect[0] + self.x, self.rect[1] + self.y, self.rect[2], self.rect[3]))
         

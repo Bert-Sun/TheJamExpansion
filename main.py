@@ -8,10 +8,10 @@ Final computer science summative "ultimate antivirus"
 '''
 
 #imports necessary modules
-import enemies as Enemies
-import boss
-import player
-import items 
+from enemies import *
+from player import *
+from items import *
+from boss import *
 
 from pygame import *
 from sys import *
@@ -48,6 +48,7 @@ bulletDisplay = [image.load('resources/player/gattling_bullet.png').convert_alph
 bullets = []
 
 enemyBullets = []
+
 enemies = []
 spawnX = 0
 spawnY = 0
@@ -196,13 +197,13 @@ debug = False
 
 
 #list of class names for all bullet types
-guns = [items.Gattling, items.Sniper]
+guns = [Gattling, Sniper]
 # list of pngs of all bullets in the game
 bulletPics = [image.load('resources/player/gattling_bullet.png').convert_alpha(), image.load('resources/player/sniper_bullet.png').convert_alpha()]
 #abreviation for player class
 bossFight = False
-pl = player.Player(mx, my, x, y)
-bs = boss.Boss()
+pl = Player(mx, my , x ,y)
+bs = Boss()
 # var init for player bullet timer
 startTicks = 0
 
@@ -348,13 +349,13 @@ while running:
                     
                     #spawns enemies based on number key pressed
                     if evnt.key == K_1:
-                        enemies.append(Enemies.Enemy(0,0))
+                        enemies.append(Enemy(0,0))
                     if evnt.key == K_2:
-                        enemies.append(Enemies.Shooter(0,0))    
+                        enemies.append(Shooter(0,0))    
                     if evnt.key == K_3:
-                        enemies.append(Enemies.Wolf(0,0)) 
+                        enemies.append(Wolf(0,0)) 
                     if evnt.key == K_4:
-                        enemies.append(Enemies.Turret(0,0))
+                        enemies.append(Turret(0,0))
                     if evnt.key == K_b:
                         #toggles bossfight
                         bossFight = not bossFight
@@ -428,43 +429,43 @@ while running:
                 
                 #on level 1, can only spawn grunts
                 if level < 2:
-                    waitingEnemies.append(Enemies.Enemy(spawnX, spawnY)) 
+                    waitingEnemies.append(Enemy(spawnX, spawnY)) 
                     enemyPoints -= 1
                 # on level 2, can spawn grunts and shooters
                 elif level < 3:
                     enemyChoice = random.randint(0, 100)
                     if enemyChoice >= 80:
-                        waitingEnemies.append(Enemies.Shooter(spawnX, spawnY))
+                        waitingEnemies.append(Shooter(spawnX, spawnY))
                         enemyPoints -= 2
                     else:
-                        waitingEnemies.append(Enemies.Enemy(spawnX, spawnY))
+                        waitingEnemies.append(Enemy(spawnX, spawnY))
                         enemyPoints -= 1
                 #on level 3, can spawn grunts, shooters or wolves
                 elif level < 4:
                     enemyChoice = random.randint(0, 100)
                     if enemyChoice >= 85:
                         enemyPoints -= 3
-                        waitingEnemies.append(Enemies.Wolf(spawnX, spawnY))
+                        waitingEnemies.append(Wolf(spawnX, spawnY))
                     elif enemyChoice >= 75:
-                        waitingEnemies.append(Enemies.Shooter(spawnX, spawnY))
+                        waitingEnemies.append(Shooter(spawnX, spawnY))
                         enemyPoints -= 2
                     else:
-                        waitingEnemies.append(Enemies.Enemy(spawnX, spawnY))      
+                        waitingEnemies.append(Enemy(spawnX, spawnY))      
                         enemyPoints -= 1
                 else:
                     #on any level after, can spawn grunts, shooters, wolves and turrets
                     enemyChoice = random.randint(0, 100)
                     if enemyChoice >= 85:
                         enemyPoints -= 3
-                        waitingEnemies.append(Enemies.Wolf(spawnX, spawnY))
+                        waitingEnemies.append(Wolf(spawnX, spawnY))
                     elif enemyChoice >= 75:
-                        waitingEnemies.append(Enemies.Shooter(spawnX, spawnY))
+                        waitingEnemies.append(Shooter(spawnX, spawnY))
                         enemyPoints -= 2
                     elif enemyChoice >= 65:
-                        waitingEnemies.append(Enemies.Turret(spawnX, spawnY))
+                        waitingEnemies.append(Turret(spawnX, spawnY))
                         enemyPoints -= 7                    
                     else:
-                        waitingEnemies.append(Enemies.Enemy(spawnX, spawnY))      
+                        waitingEnemies.append(Enemy(spawnX, spawnY))      
                         enemyPoints -= 2     
             #adds to wave
             wave+=1
@@ -492,7 +493,7 @@ while running:
         for enemy in enemies:
             if isinstance(enemy, Shooter):
                 if enemy.fire_time >= enemy.firing_speed:
-                    enemyBullets.append(items.EnemyBullet(enemy.center_x, enemy.center_y, pl.center_x, pl.center_y))
+                    enemyBullets.append(EnemyBullet(enemy.center_x, enemy.center_y, pl.center_x, pl.center_y))
                     enemy.fire_time = 0
                 else:
                     enemy.fire_time += 1
@@ -505,14 +506,14 @@ while running:
                             #gets point from angle and radius
                             enemy.turretTarget = (enemy.center_x + enemy.w // 2 * cos(radians(i)), 
                                                   enemy.center_y + enemy.w // 2 * sin(radians(i)))
-                            enemyBullets.append(items.EnemyBullet(enemy.center_x, enemy.center_y, enemy.turretTarget[0], enemy.turretTarget[1]))
+                            enemyBullets.append(EnemyBullet(enemy.center_x, enemy.center_y, enemy.turretTarget[0], enemy.turretTarget[1]))
                             enemy.gun_state = 0
                     else:
                         for i in enemy.angles_2:
                             #gets point from angle and radius
                             enemy.turretTarget = (enemy.center_x + enemy.w // 2 * cos(radians(i)), 
                                                   enemy.center_y + enemy.w // 2 * sin(radians(i)))
-                            enemyBullets.append(items.EnemyBullet(enemy.center_x, enemy.center_y, enemy.turretTarget[0], enemy.turretTarget[1]))
+                            enemyBullets.append(EnemyBullet(enemy.center_x, enemy.center_y, enemy.turretTarget[0], enemy.turretTarget[1]))
                             enemy.gun_state = 1
                             
                     enemy.fire_time = 0                        
@@ -524,15 +525,17 @@ while running:
         """Drawing of everything"""
         # Draws pickups
         for item in pickups:
-            item.draw()
-            item.update(pl)        
+            item.draw(screen)
+            if not item.update(pl):
+                pickups.remove(item)
         
         # Draws all enemies
         for enemy in enemies:
-            enemy.draw()
+            enemy.draw(screen)
             #enemy.debug(pl.center_x, pl.center_y) #debug info display for enemy
             enemy.update(pl.center_x, pl.center_y, enemies)
-            enemy.check(bullets, pickups)
+            if not enemy.check(bullets, pickups, pl):
+                enemies.remove(enemy)
             
         #draws boss, if it can
         if bossFight:
@@ -544,17 +547,19 @@ while running:
             
         # Draws all enemy bullets
         for bullet in enemyBullets:
-            bullet.draw()
+            bullet.draw(screen)
             #bullet.debug() #draws debug info for bullets
             bullet.update()
-            bullet.check(pl.hitbox)
+            if not bullet.check(pl.hitbox):
+                bullets.remove(bullet)
             
         # Draws bullets
         for bullet in bullets:
-            bullet.draw()
+            bullet.draw(screen)
             #bullet.debug()
             bullet.update()
-            bullet.check(enemies)        
+            if not bullet.check(enemies, bossFight):
+                bullets.remove(bullet)
             
         # Draws player
         pl.rotate(mx, my)
@@ -564,7 +569,7 @@ while running:
             game = False
             runMenu = True
             menu = LOSE        
-        pl.draw()
+        pl.draw(screen)
         #pl.debug(guns[pl.gun](pl.muzzle_x, pl.muzzle_y, mx, my).firing_speed) #debug info display for player
     
         """HUD drawing"""
