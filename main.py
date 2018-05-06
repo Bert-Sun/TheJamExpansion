@@ -23,6 +23,9 @@ mixer.init()
 mixer.music.load("music.ogg")
 mixer.music.play(-1)
 
+coinPic = image.load('resources/jam/jam.png')
+upgradeCost = [250, 250, 250, 250, 250, 250]
+
 # screen init
 backg = ('background.png') 
 SIZE = WIDTH, HEIGHT = (1000,700)
@@ -169,11 +172,15 @@ def drawUpgradeScreen():
         screen.blit(fontTitle.render("Warning:",  1,  (255,  0,  0)), (50, 5, fontTitle.size("Warning:")[0], fontTitle.size("Warning")[1]))  
         screen.blit(fontTitle.render("Boss Battle Ahead",  1,  (255,  0,  0)), (50, fontTitle.size("Boss Battle Ahead")[1]+5, fontTitle.size("Boss Battle Ahead")[0], fontTitle.size("Boss Battle Ahead")[1]))        
     #for each text, displays corresponding upgrade button with text on it
-    texts = ['+ damage', '+ speed', '+ firing speed', 'Restore health', '+ max health', '+ shot speed']
+    texts = ['+ damage', '+ speed', '+ firing speed', 'restore health', '+ max health', '+ shot speed', 'next stage']
     for i in range(len(texts)):
         draw.rect(screen, WHITE, upgradeRect[i])  
         #draw.rect(screen, RED, rect, 4)
-        text = fontGeneral.render(texts[i],  1,  (0,  0,  0))	
+        text = fontGeneral.render(texts[i],  1,  (0,  0,  0))
+        if i < 6:
+            cost = fontGeneral.render(str(upgradeCost[i]), 1, (0, 0, 0))
+            screen.blit(coinPic, upgradeRect[i].move(5,45))
+            screen.blit(cost, upgradeRect[i].move(50, 45))            
         screen.blit(text, upgradeRect[i].move(5,5))
 
 #general var init
@@ -299,21 +306,39 @@ while running:
             if button == 1:
                 #if clicked upgrade button, changes appropriate stat and resumes game 
                 if upgradeRect[0].collidepoint(mx, my):
-                    pl.dmg_upG += 7
+                    if pl.coins > upgradeCost[0]:
+                        pl.dmg_upG += 7
+                        pl.coins -= upgradeCost[0]
+                        upgradeCost[0] = int(upgradeCost[0]*1.33)
                 if upgradeRect[1].collidepoint(mx, my):
-                    pl.speed += 5
+                    if pl.coins > upgradeCost[1]:
+                        pl.speed += 5
+                        pl.coins -= upgradeCost[1]
+                        upgradeCost[1] = int(upgradeCost[1]*1.33)
                 if upgradeRect[2].collidepoint(mx, my):
-                    pl.firingSpeed_upG += 44
+                    if pl.coins > upgradeCost[2]:
+                        pl.firingSpeed_upG += 44
+                        pl.coins -= upgradeCost[2]                       
+                        upgradeCost[2] = int(upgradeCost[2]*1.33)
                 if upgradeRect[3].collidepoint(mx, my):
-                    pl.health = pl.max_health                
+                    if pl.coins > upgradeCost[3]:
+                        pl.health = pl.max_health
+                        pl.coins -= upgradeCost[3]                        
+                        upgradeCost[3] = int(upgradeCost[3]*1.33)
                 if upgradeRect[4].collidepoint(mx, my):
-                    pl.max_health += 500
+                    if pl.coins > upgradeCost[4]:
+                        pl.max_health += 500
+                        pl.coins -= upgradeCost[4]                        
+                        upgradeCost[4] = int(upgradeCost[4]*1.33)
                 if upgradeRect[5].collidepoint(mx, my):
-                    pl.shotSpeed_upG += 1                
-                for r in upgradeRect[:6]:
-                    if r.collidepoint(mx, my):
-                        runMenu = False
-                        game = True
+                    if pl.coins > upgradeCost[5]:
+                        pl.shotSpeed_upG += 1
+                        pl.coins -= upgradeCost[5]                        
+                        upgradeCost[5] = int(upgradeCost[5]*1.33)
+                button = 0
+                if upgradeRect[6].collidepoint(mx, my):
+                    runMenu = False
+                    game = True
                 
                 
     
@@ -348,6 +373,8 @@ while running:
                 if evnt.key == K_m:
                     enemies = []
                     waitingEnemies = []
+                if evnt.key == K_p:
+                    pl.coins += 10000
                     
                 #debug binds (cheats to test stuff)
                 if debug == True:
@@ -600,7 +627,7 @@ while running:
         textSize = fontCal.size("coins: %i" %pl.coins) 
         screen.blit(text, (WIDTH - textSize[0] - 15, textSize[1] * 4 - 15))
         
-        coinPic = image.load('resources/jam/jam.png')
+        
         screen.blit(transform.scale(coinPic, (int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5))), Rect(WIDTH - textSize[0] - 45, textSize[1] * 4 - 11, int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5)))
     
         #displays current gun's bullet at 3x size
