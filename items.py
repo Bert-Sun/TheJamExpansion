@@ -175,6 +175,7 @@ class Heart():
         self.hp = hp
         self.life_span = 300
         self.health = 0
+        self.sound = mixer.Sound("resources/jam/nom.ogg")
         
     def update(self, player):
         self.health += 1
@@ -184,6 +185,8 @@ class Heart():
         
         #checks if player touched it, if so, grants player health, and keels over (if granted health makes player health go over limit, adds however much it can before the limit is reached)
         if self.rect.colliderect(player.hitbox):
+            mixer.stop()
+            self.sound.play()
             if player.health < player.max_health:
                 for hUp in range(self.hp):
                     player.health += 1

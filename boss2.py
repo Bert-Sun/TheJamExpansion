@@ -150,11 +150,11 @@ class Boss():
                 if self.firing_time + 10 == angle:
                     self.target_angle = (self.gun2[0] + 50 * cos(radians(angle)), 
                                               self.gun2[1] + 50 * sin(radians(angle)))            
-                    enemyBullets.append(JamBullet(self.gun2[0], self.gun2[1], self.target_angle[0], self.target_angle[1], 15 * self.phase))
+                    enemyBullets.append(JamBullet(self.gun2[0], self.gun2[1], self.target_angle[0], self.target_angle[1], 15 * (self.phase + 1)))
                     
                     self.target_angle = (self.gun3[0] + 50 * cos(radians(180 - angle)), 
                                                          self.gun3[1] + 50 * sin(radians(180 -angle)))            
-                    enemyBullets.append(JamBullet(self.gun3[0], self.gun3[1], self.target_angle[0], self.target_angle[1], 15 * self.phase))                    
+                    enemyBullets.append(JamBullet(self.gun3[0], self.gun3[1], self.target_angle[0], self.target_angle[1], 15 * (self.phase + 1)))                    
                 
                 #ends attack
                 if self.firing_time + 10 >= 170:

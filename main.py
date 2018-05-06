@@ -74,6 +74,10 @@ def findAddedAngle(px, py, pAngle, addedAngle):
 def drawMain(): 
     draw.rect(screen, BLACK, (0,0, WIDTH, HEIGHT))
     screen.blit(fontTitle.render("Ultimate Antivirus",  1,  (0,  255,  0)), (100, 5, fontTitle.size("Ultimate Antivirus")[0], fontTitle.size("Ultimate Antivirus")[1]))
+    screen.blit(fontTitle.render("The Jam Expansion",  1,  (0,  200,  255)), (100, 100, fontTitle.size("The Jam Expansion")[0], fontTitle.size("The Jam Expansion")[1]))
+    screen.blit(fontHealth.render("Timur Khayrullin",  1,  (0,  200,  255)), (100, 170, fontHealth.size("The Jam Expansion")[0], fontHealth.size("The Jam Expansion")[1]))
+    screen.blit(fontHealth.render("Victor Zheng",  1,  (0,  200,  255)), (100, 185, fontHealth.size("The Jam Expansion")[0], fontHealth.size("The Jam Expansion")[1]))
+    screen.blit(fontHealth.render("Bert Sun",  1,  (0,  200,  255)), (100, 200, fontHealth.size("The Jam Expansion")[0], fontHealth.size("The Jam Expansion")[1]))
     texts = ["Play game", "Exit game"]
     for i in range(2): #sequentially draws buttons for menu, using text from list above if necessary
         draw.rect(screen, WHITE, mainMenuRect[i])
@@ -141,8 +145,10 @@ def drawWinScreen():
     draw.rect(screen, BLACK, (0,0, WIDTH, HEIGHT))
     screen.blit(fontTitle.render("You're winner!",  1,  (0,  255,  0)), (100, 5, fontTitle.size("You're winner!")[0], fontTitle.size("You're winner!")[1]))  
     screen.blit(fontTitle.render("Made by:",  1,  (0,  255,  0)), (100, fontTitle.size("Made by")[1] * 2 + 5, fontTitle.size("Made by")[0], fontTitle.size("Made by")[1]))  
-    screen.blit(fontTitle.render("Timur Khayrullin",  1,  (0,  255,  0)), (100, fontTitle.size("Made by")[1] * 3 + 5, fontTitle.size("Timur Khayrullin")[0], fontTitle.size("Timur Khayrullin")[1]))
-    screen.blit(fontTitle.render("2018",  1,  (0,  255,  0)), (100, fontTitle.size("Made by")[1] * 4 + 5, fontTitle.size("2018")[0], fontTitle.size("2018")[1]))
+    screen.blit(fontGeneral.render("Timur Khayrullin,",  1,  (0,  255,  0)), (100, fontGeneral.size("Made by")[1] * 3 + 200, fontGeneral.size("Timur Khayrullin")[0], fontGeneral.size("Timur Khayrullin")[1]))
+    screen.blit(fontGeneral.render("Victor Zheng,",  1,  (0,  255,  0)), (100, fontGeneral.size("Made by")[1] * 4 + 200, fontGeneral.size("Timur Khayrullin")[0], fontGeneral.size("Timur Khayrullin")[1]))
+    screen.blit(fontGeneral.render("Bert Sun",  1,  (0,  255,  0)), (100, fontGeneral.size("Made by")[1] * 5 + 200, fontGeneral.size("Timur Khayrullin")[0], fontGeneral.size("Timur Khayrullin")[1]))
+    screen.blit(fontTitle.render("2018",  1,  (0,  255,  0)), (100, fontTitle.size("Made by")[1] * 4 + 200, fontTitle.size("2018")[0], fontTitle.size("2018")[1]))
     draw.rect(screen, WHITE, returnRect)
     text = fontGeneral.render("Return to",  1,  (0,  0,  0))
     screen.blit(text, returnRect)
@@ -155,7 +161,7 @@ for y in range(200, 500, 115):
     for x in range(200, 800, 200):
         upgradeRect.append(Rect(x, y, 185, 100))
 
-texts = ['+ damage', '+ speed', '+ firing speed', 'restore health', '+ max health', '+ shot speed', 'next stage', 'shotgun', 'oxford']
+texts = ['+ damage', '+ speed', '+ firing speed', 'restore health', '+ max health', '+ shot speed', 'next stage', 'shotgun', 'oxford bomb']
 def drawUpgradeScreen(pl, texts):
     #as long as boss level isn't ahead, displays upgrade instructions
     draw.rect(screen, BLACK, (0,0, WIDTH, HEIGHT))
@@ -238,6 +244,7 @@ graceTimer = 0
 
 #used for debugging the game (set to true for cheats)
 debug = False
+
 
 #list of class names for all bullet types
 guns = [Gattling, Sniper, Shotgun]
@@ -506,7 +513,7 @@ while running:
         
         #goes to new level once waves are completed, prompts upgrade screen
         if wave == 5 and enemies == [] and waitingEnemies == []:
-            if graceTimer >= 90:
+            if graceTimer >= 150:
                 level +=1
                 wave = 1
                 game = False
