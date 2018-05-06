@@ -139,17 +139,17 @@ class EnemyBullet(Bullet):
         # Checks if the bullet is out of range, then deletes it, if it is
         if self.prog >= self.rnge:
             return False
-        
-        #elif not 0 < self.x < 1000 or not 0 < self.y < 700:
-            #print("yo")
-            #return False
+            
+        elif not 0 < self.x < 1000 or not 0 < self.y < 700:
+            return False
+            
             
         #checks if bullet hits target hitbox, if so, starts a timer that kills the bulle after 1 frame
         elif self.rect.colliderect(playerHitbox):
             self.deathTick += 1
 
         if self.deathTick > 1:
-            return False   
+            return False
         return True
 
 class Heart():

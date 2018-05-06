@@ -215,7 +215,7 @@ enemyPoints = 0
 graceTimer = 0
 
 #used for debugging the game (set to true for cheats)
-debug = False
+debug = True
 
 
 #list of class names for all bullet types
@@ -540,7 +540,6 @@ while running:
         for enemy in enemies:
             if isinstance(enemy, Shooter):
                 if enemy.fire_time >= enemy.firing_speed:
-                    print("hey")
                     enemyBullets.append(EnemyBullet(enemy.center_x, enemy.center_y, pl.center_x, pl.center_y))
                     enemy.fire_time = 0
                 else:
@@ -594,12 +593,14 @@ while running:
             
             
         # Draws all enemy bullets
+        print(len(enemyBullets))
         for bullet in enemyBullets:
             bullet.draw(screen)
             #bullet.debug() #draws debug info for bullets
             bullet.update()
             if not bullet.check(pl.hitbox):
-                bullets.remove(bullet)
+                enemyBullets.remove(bullet)
+                
             
         # Draws bullets
         for bullet in bullets:
