@@ -60,7 +60,19 @@ spawnY = 0
 mainMenuRect = []
 for y in range(200, 500, 100):
     mainMenuRect.append(Rect(400, y, 200, 75))
+
+def findAddedAngle(px, py, pAngle, addedAngle):
+    fireAngle = pAngle+addedAngle
+
+    dy = tan(radians(fireAngle))
     
+    if fireAngle < -90 or fireAngle > 90:
+        x = px - 500 
+        y = py + 500* abs(dy)       
+        return (-x,-y,dy)
+    x = px + 500 
+    y = py - 500* dy    
+    return (x,y,dy)
 #function for drawing the main menu
 def drawMain(): 
     draw.rect(screen, BLACK, (0,0, WIDTH, HEIGHT))
@@ -196,12 +208,11 @@ enemyPoints = 0
 graceTimer = 0
 
 #used for debugging the game (set to true for cheats)
-debug = False          
-
+debug = True
 
 
 #list of class names for all bullet types
-guns = [Gattling, Sniper]
+guns = [Gattling, Sniper, Shotgun]
 # list of pngs of all bullets in the game
 bulletPics = [image.load('resources/player/gattling_bullet.png').convert_alpha(), image.load('resources/player/sniper_bullet.png').convert_alpha()]
 #abreviation for player class
@@ -381,6 +392,7 @@ while running:
                 if evnt.key == K_d:
                     pl.directions[3] = False  
         
+        
         if button == 1:
             
             #if bullet timer is met, creates a new bullet at appropriate x and y, catches fire rates less than 2 (because bullets start going backwards or don't move a all if they hit a fire rate of < 2)
@@ -389,8 +401,12 @@ while running:
                 totalFiringSpeed = 2
             if time.get_ticks() - startTicks > totalFiringSpeed:
                 bullets.append(guns[pl.gun](pl.muzzle_x, pl.muzzle_y, mx, my))
+                if pl.gun == 2:
+                    bullets.append(guns[pl.gun](pl.muzzle_x, pl.muzzle_y, findAddedAngle(pl.center_x, pl.center_y, pl.angle, 15)[0], findAddedAngle(pl.center_x, pl.center_y, pl.angle, 15)[1]))
+                    bullets.append(guns[pl.gun](pl.muzzle_x, pl.muzzle_y, findAddedAngle(pl.center_x, pl.center_y, pl.angle, -15)[0], findAddedAngle(pl.center_x, pl.center_y, pl.angle, -15)[1]))
                 startTicks = time.get_ticks()
         
+    
         
         
         #after level 5, gets ready for bossfight
@@ -579,9 +595,9 @@ while running:
         """HUD drawing"""
     
         #displays current gun's bullet at 3x size
-        bullDisplayW = int(bulletPics[pl.gun].get_width() * 1.5)
-        bullDisplayH = int(bulletPics[pl.gun].get_height() * 1.5)
-        screen.blit(transform.scale(bulletPics[pl.gun], (bullDisplayW, bullDisplayH)), Rect(15 + 12 - bullDisplayW // 2, 45 + 12 - bullDisplayH // 2, bullDisplayW, bullDisplayH))
+        #bullDisplayW = int(bulletPics[pl.gun].get_width() * 1.5)
+        #bullDisplayH = int(bulletPics[pl.gun].get_height() * 1.5)
+        #screen.blit(transform.scale(bulletPics[pl.gun], (bullDisplayW, bullDisplayH)), Rect(15 + 12 - bullDisplayW // 2, 45 + 12 - bullDisplayH // 2, bullDisplayW, bullDisplayH))
         
         #displays current level, wave and remaining enemies
         text = fontCal.render("level %i" %level, 1,BLACK)

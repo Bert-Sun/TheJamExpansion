@@ -21,6 +21,7 @@ class Player:
         self.directions = [False, False, False, False] 
         self.x = x
         self.y = y
+        self.angle = 0
         self.mouse_x, self.mouse_y = mouse_x, mouse_y
         self.original_image = image.load('resources/player/cannonEnd1.png').convert_alpha()
         self.image = self.original_image
@@ -52,7 +53,7 @@ class Player:
         rel_x, rel_y = mouseX - self.x, mouseY - self.y
         #this is where the magic happens. math.atan2 is used to calculate the angle from the current position to the new mouse position (at least that's what I got from it)
         angle = (180 / pi) * -atan2(rel_y, rel_x) + 5
-
+        self.angle = angle
         # Rotate the original image without modifying it.
         self.image = transform.rotate(self.original_image, int(angle))
         # Get a new rect with the center of the old rect.

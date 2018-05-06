@@ -109,6 +109,19 @@ class Sniper(Bullet):
         self.w, self.h = self.image.get_width(), self.image.get_height()
         self.rect = Rect(self.x, self.y, self.w, self.h)      
 
+class Shotgun(Bullet):
+    #spread bullet at 15 degrees
+    def __init__(self, x, y, target_x, target_y):
+        Bullet.__init__(self, x, y, target_x, target_y)
+        self.image = image.load('resources/player/sniper_bullet.png').convert_alpha()
+        self.hold = False
+        self.vel = 20
+        self.rnge = 50 
+        self.dmg = 30
+        self.dmg_mult = 1        
+        self.firing_speed = 333 #ticks before allowed to fire again (1000 ticks in a second)
+        self.w, self.h = self.image.get_width(), self.image.get_height()
+        self.rect = Rect(self.x, self.y, self.w, self.h)     
 
 class EnemyBullet(Bullet):
     #these bullets are fired only by enemies
