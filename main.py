@@ -92,7 +92,7 @@ def drawInstructions():
     screen.blit(bk, (0,0))
     display.flip()
     
-    texts = ["you are an extremely advanced antivirus", "employed by TimKhay industries,", "made to destroy any incoming viruses directly, in real time."]
+    texts = ["you are an extremely advanced antivirus", "employed by the University of Waterloo,", "made to destroy any incoming viruses directly, in real time."]
     #tells story through center-aligned text
     for text in texts: 
         screen.blit(fontGeneral.render(text, 1, WHITE), (WIDTH // 2 - fontGeneral.size(text)[0] // 2, int(.20 * HEIGHT) + int((fontGeneral.size(text)[1] + 3) * texts.index(text))))
@@ -161,7 +161,7 @@ for y in range(200, 500, 115):
     for x in range(200, 800, 200):
         upgradeRect.append(Rect(x, y, 185, 100))
     
-def drawUpgradeScreen():
+def drawUpgradeScreen(pl):
     #as long as boss level isn't ahead, displays upgrade instructions
     draw.rect(screen, BLACK, (0,0, WIDTH, HEIGHT))
     if level < 5 :
@@ -182,6 +182,14 @@ def drawUpgradeScreen():
             screen.blit(coinPic, upgradeRect[i].move(5,45))
             screen.blit(cost, upgradeRect[i].move(50, 45))            
         screen.blit(text, upgradeRect[i].move(5,5))
+    #ea 
+    screen.blit(transform.scale(image.load('resources/jam/ea.png'), (175, 175)), Rect(5, 250, 50, 50))
+    #displays jam coin amount
+    text = fontCal.render("coins: %i" %pl.coins, 1, WHITE)
+    textSize = fontCal.size("coins: %i" %pl.coins) 
+    screen.blit(text, (WIDTH - textSize[0] - 15, textSize[1] * 6 - 15))
+    
+    screen.blit(transform.scale(coinPic, (int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5))), Rect(WIDTH - textSize[0] - 45, textSize[1] * 6 - 11, int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5)))    
 
 #general var init
 clock = time.Clock()
@@ -215,7 +223,7 @@ enemyPoints = 0
 graceTimer = 0
 
 #used for debugging the game (set to true for cheats)
-debug = True
+debug = False
 
 
 #list of class names for all bullet types
@@ -302,7 +310,7 @@ while running:
               
         if menu == UPGRADE:
             
-            drawUpgradeScreen()
+            drawUpgradeScreen(pl)
             if button == 1:
                 #if clicked upgrade button, changes appropriate stat and resumes game 
                 if upgradeRect[0].collidepoint(mx, my):
@@ -339,6 +347,8 @@ while running:
                 if upgradeRect[6].collidepoint(mx, my):
                     runMenu = False
                     game = True
+                    mixer.music.load("music.ogg")
+                    mixer.music.play(-1)                    
                 
                 
     
@@ -455,6 +465,8 @@ while running:
                 game = False
                 runMenu = True
                 menu = UPGRADE
+                mixer.music.load("shopmusic.ogg")
+                mixer.music.play(-1)                
                 pl.x, pl.y = WIDTH//2, HEIGHT//2
                 button = 0
                 graceTimer = 0
@@ -627,7 +639,6 @@ while running:
         text = fontCal.render("coins: %i" %pl.coins, 1,BLACK)
         textSize = fontCal.size("coins: %i" %pl.coins) 
         screen.blit(text, (WIDTH - textSize[0] - 15, textSize[1] * 4 - 15))
-        
         
         screen.blit(transform.scale(coinPic, (int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5))), Rect(WIDTH - textSize[0] - 45, textSize[1] * 4 - 11, int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5)))
     

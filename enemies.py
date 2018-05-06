@@ -26,8 +26,9 @@ class Enemy():
         self.age = 0
         self.health = 100
         self.dmg = 10
-        self.health_drop_chance = random.random()
+        self.item_drop_chance = random.random()
         self.coin_drop_amount = random.randint(5, 20)
+        
         
     def update(self, tox, toy, enemies): 
         #updates target x and y
@@ -74,8 +75,10 @@ class Enemy():
         if self.health <= 0:
             for i in range(self.coin_drop_amount):
                 pickups.append(JamCoin(random.randrange(self.rect.bottomleft[0], self.rect.bottomright[0]), random.randrange(self.rect.topleft[1], self.rect.bottomleft[1])))
-            if self.health_drop_chance <= .15:
-                pickups.append(Heart(self.x, self.y, 200))            
+            if self.item_drop_chance <= .15:
+                pickups.append(Heart(self.x, self.y, 200)) 
+            if .15 <= self.item_drop_chance <= .30:
+                pickups.append(Cloudflare(self.x, self.y)) 
             return False
         
         return True

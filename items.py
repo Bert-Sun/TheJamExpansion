@@ -1,5 +1,6 @@
 from pygame import * 
 from math import *
+mixer.init()
 init()
 
 class Bullet:
@@ -193,9 +194,10 @@ class JamCoin():
         self.image = image.load('resources/jam/jam.png').convert_alpha()
         self.x = x
         self.y = y
-        self.rect = Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
+        self.rect = Rect(self.x-45, self.y-45, self.image.get_width()+90, self.image.get_height()+90)
         self.life_span = 500
         self.health = 0
+        self.pop = mixer.Sound('popSound.ogg')
         
     def update(self, player):
         self.health += 1
@@ -206,6 +208,7 @@ class JamCoin():
         #checks if player touched it, if so, grants player health, and keels over (if granted health makes player health go over limit, adds however much it can before the limit is reached)
         if self.rect.colliderect(player.hitbox):
             player.coins += 1
+            self.pop.play()
             return False
         return True
     
@@ -230,13 +233,13 @@ class Oxford():
 
 class Cloudflare():
     def __init__(self, x, y):
-        self.image = image.load('resources/jam/cloudflare.png').convert_alpha()
-        self.x = x
-        self.y = y            
-        self.rect = Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
-        self.health = 0
-        self.lifespan = 0
-        
+            self.image = image.load('resources/jam/cloudflare.png').convert_alpha()
+            self.x = x
+            self.y = y            
+            self.rect = Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
+            self.life_span = 500
+            self.health = 0
+            
     def update(self, player):
         self.health += 1
         if self.health >= self.life_span:
@@ -247,5 +250,8 @@ class Cloudflare():
             player.invulnerability = 180
             return False
         return True    
+    
+    def draw(self, screen):
+        screen.blit(self.image, self.rect)    
 
 
