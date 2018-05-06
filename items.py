@@ -153,6 +153,17 @@ class EnemyBullet(Bullet):
             return False
         return True
 
+class JamBullet(EnemyBullet):
+    def __init__(self, x, y, target_x, target_y, damage = 100):
+        EnemyBullet.__init__(self, x, y, target_x, target_y)
+        self.image = image.load('resources/jam/jam_bullet.png').convert_alpha()
+        self.w, self.h = self.image.get_width(), self.image.get_height()
+        self.rect = Rect(self.x, self.y, self.w, self.h)        
+        self.hold = False
+        self.vel = 10
+        self.rnge = 90
+        self.dmg = damage    
+
 class Heart():
     #basic heart pickup
     def __init__(self, x, y, hp):
@@ -239,6 +250,7 @@ class Cloudflare():
             self.rect = Rect(self.x, self.y, self.image.get_width(), self.image.get_height())
             self.life_span = 500
             self.health = 0
+            self.shing = mixer.Sound("resources/jam/sing.ogg")
             
     def update(self, player):
         self.health += 1
@@ -248,6 +260,8 @@ class Cloudflare():
         #checks if player touched it, give invulnerability
         if self.rect.colliderect(player.hitbox):
             player.invulnerability = 180
+            mixer.stop()
+            self.shing.play()
             return False
         return True    
     

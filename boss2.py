@@ -34,8 +34,8 @@ class Boss():
         self.image = image.load('resources/jam/boss/uncapped.png').convert_alpha()
         self.w = self.image.get_width() // 5
         self.h = self.image.get_width() // 5
-        self.x = 500
-        self.y = 175
+        self.x = 300
+        self.y = 25
         self.rect = Rect(self.x, self.y, self.w, self.h)
         self.image = transform.scale(self.image, (self.w, self.h))
         
@@ -48,7 +48,7 @@ class Boss():
         self.firing_time = 0
         #grace time is reset if grace time is reached
         self.grace_timers = [120, 90, 65]
-        self.grace_time = 60        
+        self.grace_time = 180        
         
         
         #initialize boss properties

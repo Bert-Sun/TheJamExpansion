@@ -11,7 +11,7 @@ Final computer science summative "ultimate antivirus"
 from enemies import *
 from player import *
 from items import *
-from boss import *
+from boss2 import *
 
 from pygame import *
 from sys import *
@@ -422,6 +422,9 @@ while running:
                     pl.directions[2] = True
                 if evnt.key == K_d:
                     pl.directions[3] = True
+                if evnt.key == K_m:
+                    enemies = []
+                    waitingEnemies = []                    
                 if evnt.key == K_SPACE and pl.hasOxford:
                     enemies = []
                     waitingEnemies = []
@@ -644,9 +647,9 @@ while running:
         if bossFight:
             bs.draw(screen)
             bs.update(pl, enemyBullets)
-            bs.check(bullets, pickups, bossFight, level)
-
-            
+            if not bs.check(bullets, pickups, pl):
+                bossFight = False
+                level = 6
             
         # Draws all enemy bullets
         for bullet in enemyBullets:
