@@ -140,8 +140,9 @@ class EnemyBullet(Bullet):
         if self.prog >= self.rnge:
             return False
         
-        elif not 0 < self.x < 1000 or not 0 < self.y < 700:
-            return False
+        #elif not 0 < self.x < 1000 or not 0 < self.y < 700:
+            #print("yo")
+            #return False
             
         #checks if bullet hits target hitbox, if so, starts a timer that kills the bulle after 1 frame
         elif self.rect.colliderect(playerHitbox):

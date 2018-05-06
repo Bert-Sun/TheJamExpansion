@@ -208,13 +208,13 @@ enemyPoints = 0
 graceTimer = 0
 
 #used for debugging the game (set to true for cheats)
-debug = True
+debug = False
 
 
 #list of class names for all bullet types
 guns = [Gattling, Sniper, Shotgun]
 # list of pngs of all bullets in the game
-bulletPics = [image.load('resources/player/gattling_bullet.png').convert_alpha(), image.load('resources/player/sniper_bullet.png').convert_alpha()]
+bulletPics = [image.load('resources/player/gattling_bullet.png').convert_alpha(), image.load('resources/player/sniper_bullet.png').convert_alpha(), image.load('resources/player/sniper_bullet.png').convert_alpha()]
 #abreviation for player class
 bossFight = False
 pl = Player(mx, my , x ,y)
@@ -513,6 +513,7 @@ while running:
         for enemy in enemies:
             if isinstance(enemy, Shooter):
                 if enemy.fire_time >= enemy.firing_speed:
+                    print("hey")
                     enemyBullets.append(EnemyBullet(enemy.center_x, enemy.center_y, pl.center_x, pl.center_y))
                     enemy.fire_time = 0
                 else:
@@ -593,11 +594,19 @@ while running:
         #pl.debug(guns[pl.gun](pl.muzzle_x, pl.muzzle_y, mx, my).firing_speed) #debug info display for player
     
         """HUD drawing"""
+        
+        #displays jam coin amount
+        text = fontCal.render("coins: %i" %pl.coins, 1,BLACK)
+        textSize = fontCal.size("coins: %i" %pl.coins) 
+        screen.blit(text, (WIDTH - textSize[0] - 15, textSize[1] * 4 - 15))
+        
+        coinPic = image.load('resources/jam/jam.png')
+        screen.blit(transform.scale(coinPic, (int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5))), Rect(WIDTH - textSize[0] - 45, textSize[1] * 4 - 11, int(coinPic.get_height() * 1.5), int(coinPic.get_width() * 1.5)))
     
         #displays current gun's bullet at 3x size
-        #bullDisplayW = int(bulletPics[pl.gun].get_width() * 1.5)
-        #bullDisplayH = int(bulletPics[pl.gun].get_height() * 1.5)
-        #screen.blit(transform.scale(bulletPics[pl.gun], (bullDisplayW, bullDisplayH)), Rect(15 + 12 - bullDisplayW // 2, 45 + 12 - bullDisplayH // 2, bullDisplayW, bullDisplayH))
+        bullDisplayW = int(bulletPics[pl.gun].get_width() * 1.5)
+        bullDisplayH = int(bulletPics[pl.gun].get_height() * 1.5)
+        screen.blit(transform.scale(bulletPics[pl.gun], (bullDisplayW, bullDisplayH)), Rect(15 + 12 - bullDisplayW // 2, 45 + 12 - bullDisplayH // 2, bullDisplayW, bullDisplayH))
         
         #displays current level, wave and remaining enemies
         text = fontCal.render("level %i" %level, 1,BLACK)
@@ -609,7 +618,7 @@ while running:
         screen.blit(text, (WIDTH - textSize[0] - 15, textSize[1] * 2 - 15))        
         
         text = fontCal.render("Remaining viruses: %i" %(len(waitingEnemies) + len(enemies)) , 1,BLACK)
-        textSize = fontCal.size("Remaining viruses: %i" %(len(waitingEnemies) + len(enemies)) )
+        textSize = fontCal.size("Remaining viruses: %i" %(len(waitingEnemies) + len(enemies)))
         screen.blit(text, (WIDTH - textSize[0] - 15, textSize[1] * 3 - 15))
         
         
